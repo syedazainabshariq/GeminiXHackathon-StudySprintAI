@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Workspace - StudySprint AI</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 3%;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-primary);
+        }
+
+        .btn-nav {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            color: var(--text-main);
+            border-color: var(--accent-primary);
+        }
+
+        /* Main Workspace Layout */
+        .workspace-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem 3%;
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        @media (max-width: 992px) {
+            .workspace-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Column: Input Section */
+        .input-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            height: 380px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .btn-generate {
+            background: var(--accent-primary);
+            color: #fff;
+            padding: 0.85rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-generate:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Right Column: Output Panel */
+        .output-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+        }
+
+        /* Empty State */
+        .placeholder-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 350px;
+            color: var(--text-muted);
+            text-align: center;
+            gap: 0.75rem;
+        }
+
+        .placeholder-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        /* Generated Study Kit Content */
+        .kit-section {
+            margin-bottom: 2rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .kit-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .keywords-badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .keyword-badge {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--text-main);
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        /* Sprint Plan Timeline */
+        .sprint-day {
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+            border-left: 2px solid var(--accent-primary);
+        }
+
+        .sprint-day strong {
+            color: var(--text-main);
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .sprint-day p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Interactive Quiz Card */
+        .quiz-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            width: 100%;
+            text-align: left;
+            padding: 0.6rem 0.8rem;
+            margin-top: 0.5rem;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover:not(:disabled) {
+            border-color: var(--accent-primary);
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success-color);
+            color: #fff;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--error-color);
+            color: #fff;
+        }
+
+        .quiz-explanation {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        /* Interactive Flashcard Flip */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .flashcard {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+
+        .flashcard-text {
+            font-size: 0.95rem;
+        }
+
+        /* Error Notification */
+        .error-banner {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--error-color);
+            color: #fca5a5;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <nav>
+        <a href="/app.html" class="logo">🚀 StudySprint <span>AI</span> Workspace</a>
+        <a href="/app.html" class="btn-nav">← Back to Home</a>
+    </nav>
+
+    <!-- Workspace Container -->
+    <div class="workspace-container">
+        
+        <!-- Left Side: Raw Notes Input -->
+        <div class="input-panel">
+            <div class="panel-header">
+                <span class="panel-title">1. Paste Study Notes / Raw Text</span>
+            </div>
+
+            <div id="error-banner" class="error-banner"></div>
+
+            <textarea id="notes-input" placeholder="Paste your messy lecture notes, article excerpts, or topic outlines here... (e.g. Chapter summary on Photosynthesis, Machine Learning algorithms, or World War II timeline)"></textarea>
+
+            <button id="btn-generate" class="btn-generate" onclick="generateKit()">
+                <span>⚡ Generate Study Kit</span>
+            </button>
+        </div>
+
+        <!-- Right Side: Structured AI Output -->
+        <div class="output-panel" id="output-panel">
+            
+            <!-- Default Placeholder -->
+            <div id="placeholder-state" class="placeholder-state">
+                <div class="placeholder-icon">🧠</div>
+                <h3>Your AI Study Kit will appear here</h3>
+                <p>Paste your notes on the left and click "Generate Study Kit" to instantly build summaries, quizzes, flashcards, and a sprint schedule.</p>
+            </div>
+
+            <!-- Container for Generated Results -->
+            <div id="kit-results" style="display: none;"></div>
+
+        </div>
+
+    </div>
+
+    <script>
+        async function generateKit() {
+            const notesInput = document.getElementById('notes-input').value.trim();
+            const btnGenerate = document.getElementById('btn-generate');
+            const errorBanner = document.getElementById('error-banner');
+            const placeholderState = document.getElementById('placeholder-state');
+            const kitResults = document.getElementById('kit-results');
+
+            // Reset banner & results state
+            errorBanner.style.display = 'none';
+            if (notesInput.length < 10) {
+                errorBanner.innerText = "Please paste notes with at least 10 characters.";
+                errorBanner.style.display = 'block';
+                return;
+            }
+
+            // Show Loading State
+            btnGenerate.disabled = true;
+            btnGenerate.innerHTML = '<span>⏳ Processing with Gemini 2.5...</span>';
+            placeholderState.innerHTML = `
+                <div class="placeholder-icon">⚡</div>
+                <h3>Synthesizing Study Kit...</h3>
+                <p>Extracting core concepts, generating active recall questions, and planning your 3-day study sprint.</p>
+            `;
+            placeholderState.style.display = 'flex';
+            kitResults.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/generate-kit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ notes: notesInput })
+                });
+
+                const json = await response.json();
+
+                if (!response.ok || json.status !== 'success') {
+                    throw new Error(json.detail || "Failed to generate study kit.");
+                }
+
+                renderStudyKit(json.data);
+
+            } catch (err) {
+                placeholderState.style.display = 'none';
+                errorBanner.innerText = err.message || "An unexpected error occurred.";
+                errorBanner.style.display = 'block';
+            } finally {
+                btnGenerate.disabled = false;
+                btnGenerate.innerHTML = '<span>⚡ Generate Study Kit</span>';
+            }
+        }
+
+        function renderStudyKit(data) {
+            const placeholderState = document.getElementById('placeholder-state');
+            const kitResults = document.getElementById('kit-results');
+
+            placeholderState.style.display = 'none';
+            kitResults.style.display = 'block';
+
+            // Build HTML elements dynamically
+            let html = ``;
+
+            // 1. High-Yield Summary & Key Terms
+            html += `
+                <div class="kit-section">
+                    <h3>📌 Executive Summary</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">${data.summary}</p>
+                    
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-main);">Key Terms:</h4>
+                    <div class="keywords-badge-container">
+                        ${data.keywords.map(kw => `<span class="keyword-badge">${kw}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+
+            // 2. 3-Day Sprint Plan
+            if (data.sprint_plan) {
+                html += `
+                    <div class="kit-section">
+                        <h3>📅 3-Day Study Sprint Plan</h3>
+                        <div class="sprint-day">
+                            <strong>Day 1: Core Concepts & Foundation</strong>
+                            <p>${data.sprint_plan.day_1}</p>
+                        </div>
+                        <div class="sprint-day">
+                            <strong>Day 2: Active Recall & Practice</strong>
+                            <p>${data.sprint_plan.day_2}</p>
+                        </div>
+                        <div class="sprint-day">
+                            <strong>Day 3: Final Self-Assessment</strong>
+                            <p>${data.sprint_plan.day_3}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 3. Interactive Quiz Questions
+            if (data.quiz && data.quiz.length > 0) {
+                html += `<div class="kit-section"><h3>🧠 Active Recall Quiz</h3>`;
+                data.quiz.forEach((q, qIndex) => {
+                    html += `
+                        <div class="quiz-card">
+                            <p style="font-weight: 600; margin-bottom: 0.5rem;">Q${qIndex + 1}. ${q.question}</p>
+                            ${q.options.map((opt, optIndex) => `
+                                <button class="quiz-option" onclick="checkAnswer(this, ${optIndex}, ${q.correct_option_index}, 'exp-${qIndex}')">
+                                    ${opt}
+                                </button>
+                            `).join('')}
+                            <p id="exp-${qIndex}" class="quiz-explanation">💡 <strong>Explanation:</strong> ${q.explanation}</p>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            // 4. Interactive Flashcards
+            if (data.flashcards && data.flashcards.length > 0) {
+                html += `
+                    <div class="kit-section">
+                        <h3>🎴 Flashcards (Click to flip)</h3>
+                        <div class="flashcard-grid">
+                            ${data.flashcards.map(card => `
+                                <div class="flashcard" onclick="flipCard(this, '${escapeHtml(card.front)}', '${escapeHtml(card.back)}')">
+                                    <span class="flashcard-text"><strong>Q:</strong> ${card.front}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            kitResults.innerHTML = html;
+        }
+
+        // Quiz option selection logic
+        function checkAnswer(btn, selectedIdx, correctIdx, expId) {
+            const parent = btn.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+            const exp = document.getElementById(expId);
+
+            options.forEach((optBtn, idx) => {
+                optBtn.disabled = true;
+                if (idx === correctIdx) {
+                    optBtn.classList.add('correct');
+                } else if (idx === selectedIdx) {
+                    optBtn.classList.add('incorrect');
+                }
+            });
+
+            if (exp) exp.style.display = 'block';
+        }
+
+        // Flashcard flip toggle logic
+        function flipCard(cardElem, front, back) {
+            const textElem = cardElem.querySelector('.flashcard-text');
+            if (cardElem.dataset.flipped === 'true') {
+                textElem.innerHTML = `<strong>Q:</strong> ${front}`;
+                cardElem.dataset.flipped = 'false';
+                cardElem.style.borderColor = 'var(--border-color)';
+            } else {
+                textElem.innerHTML = `<span style="color: var(--success-color)"><strong>A:</strong> ${back}</span>`;
+                cardElem.dataset.flipped = 'true';
+                cardElem.style.borderColor = 'var(--accent-primary)';
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>

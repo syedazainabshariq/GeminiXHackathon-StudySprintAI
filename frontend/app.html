@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySprint AI - Turn Raw Notes Into Exam Prep in Seconds</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --accent-primary: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --success-color: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        header.hero {
+            text-align: center;
+            padding: 6rem 5% 4rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-primary);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3.25rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem 5%;
+            background: rgba(30, 41, 59, 0.4);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pricing-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .price-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 1.5rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .price-features {
+            list-style: none;
+            margin: 1.5rem 0 2rem;
+            text-align: left;
+        }
+
+        .price-features li {
+            padding: 0.5rem 0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .price-features li::before {
+            content: "✓";
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 5%;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">🚀 StudySprint <span>AI</span></div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="/studio.html" class="btn-primary">Launch Studio</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="badge">Powered by Gemini 2.5 Flash ⚡</div>
+        <h1>Turn Hours of Messy Notes into Exam Prep in Seconds</h1>
+        <p>Upload your raw study material and let AI instantly generate structured summaries, active-recall quizzes, interactive flashcards, and a 3-day sprint plan.</p>
+        <div class="hero-cta">
+            <a href="/studio.html" class="btn-primary" style="font-size: 1.1rem; padding: 0.85rem 2rem;">Start Free Sprint Now</a>
+        </div>
+    </header>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Everything You Need to Ace Your Exams</h2>
+            <p>Built for active recall, spaced repetition, and zero wasted time.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">📌</div>
+                <h3>High-Yield Summaries</h3>
+                <p>Gemini 2.5 cuts through filler text to extract key concepts and crucial definitions.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🧠</div>
+                <h3>Active Recall Quizzes</h3>
+                <p>Test your understanding with instant multiple-choice questions complete with instant answer feedback.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎴</div>
+                <h3>Smart Flashcards</h3>
+                <p>Review bite-sized question-and-answer pairs designed for rapid concept retention.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📅</div>
+                <h3>3-Day Study Sprint</h3>
+                <p>Get a step-by-step roadmap tailored to organize your study sessions leading up to exam day.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Choose the plan that fits your study workload.</p>
+        </div>
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="price-card">
+                <h3>Free Student</h3>
+                <div class="price">$0 <span>/ month</span></div>
+                <ul class="price-features">
+                    <li>5 Study Kits per day</li>
+                    <li>Standard Gemini generation</li>
+                    <li>Basic Quiz & Flashcards</li>
+                    <li>Community Support</li>
+                </ul>
+                <a href="/studio.html" class="btn-primary" style="background: transparent; border: 1px solid var(--border-color); display: block;">Get Started</a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="price-card featured">
+                <h3>Sprint Pro</h3>
+                <div class="price">$9 <span>/ month</span></div>
+                <ul class="price-features">
+                    <li>Unlimited Study Kits</li>
+                    <li>Gemini 2.5 Ultra Speed</li>
+                    <li>Export to PDF & Markdown</li>
+                    <li>Priority AI Processing</li>
+                </ul>
+                <button class="btn-primary" style="width: 100%;" onclick="handleUpgrade('Sprint Pro', '$9/mo')">Upgrade to Pro</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 StudySprint AI. Built for the Devpost Hackathon with Gemini 2.5.</p>
+    </footer>
+
+    <script>
+        async function handleUpgrade(planName, price) {
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan_name: planName, price: price })
+                });
+                const result = await response.json();
+                alert(result.message || `Upgrading to ${planName}!`);
+            } catch (err) {
+                alert("Checkout initiated!");
+            }
+        }
+    </script>
+</body>
+</html>
