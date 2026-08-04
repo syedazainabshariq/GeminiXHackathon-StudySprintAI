@@ -24,8 +24,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
-
+# Bulletproof path resolution for Vercel serverless environment
+if os.path.exists("/var/task/frontend"):
+    frontend_dir = "/var/task/frontend"
+else:
+    frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
 # ==========================================
 # 1. API Endpoints
 # ==========================================
