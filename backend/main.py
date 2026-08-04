@@ -2,13 +2,12 @@ import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 from backend.agent import generate_study_kit
 
-# Load environment variables from .env
 load_dotenv()
 
 app = FastAPI(
@@ -17,7 +16,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for local development and web clients
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,8 +24,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
 
-# Request schemas
+# ==========================================
+# 1. API Endpoints
+# ==========================================
+
 class NotesRequest(BaseModel):
     notes: str
 
@@ -35,23 +37,8 @@ class CheckoutRequest(BaseModel):
     plan_name: str
     price: str
 
-
-# ==========================================
-# API Endpoints
-# ==========================================
-
-@app.get("/")
-async def root():
-    """Redirect root access directly to the studio workspace."""
-    return RedirectResponse(url="/app.html")
-
-
 @app.post("/api/generate-kit")
 async def handle_generate_study_kit(data: NotesRequest):
-    """
-    Accepts student notes and returns a structured AI study kit
-    (summary, keywords, 3-day sprint plan, quiz, flashcards).
-    """
     if not data.notes or len(data.notes.strip()) < 10:
         raise HTTPException(
             status_code=400,
@@ -67,25 +54,45 @@ async def handle_generate_study_kit(data: NotesRequest):
             detail=f"Failed to generate study kit: {str(e)}"
         )
 
-
 @app.post("/api/checkout")
 async def handle_checkout(data: CheckoutRequest):
-    """
-    Simulated checkout endpoint for plan upgrades.
-    """
     return {
         "status": "success",
         "message": f"Successfully initiated checkout for {data.plan_name} plan ({data.price}).",
         "checkout_url": "#"
     }
 
+# ==========================================
+# 2. Page Delivery Routes (Explicit File Serving)
+# ==========================================
+
+@app.get("/")
+async def root():
+    return FileResponse(os.path.join(frontend_dir, "app.html"))
+
+@app.get("/app.html")
+async def serve_app():
+    return FileResponse(os.path.join(frontend_dir, "app.html"))
+
+@app.get("/studio.html")
+async def serve_studio():
+    return FileResponse(os.path.join(frontend_dir, "studio.html"))
+
+@app.get("/login.html")
+async def serve_login():
+    return FileResponse(os.path.join(frontend_dir, "login.html"))
+
+@app.get("/signup.html")
+async def serve_signup():
+    return FileResponse(os.path.join(frontend_dir, "signup.html"))
+
+@app.get("/404.html")
+async def serve_404():
+    return FileResponse(os.path.join(frontend_dir, "404.html"))
 
 # ==========================================
-# Mount Frontend Static Files
+# 3. Static Files Directory Mount
+# Serves JS, CSS, and other static assets (e.g., firebase-config.js)
 # ==========================================
 
-# Ensures all files in frontend/ (studio.html, app.html, styles.css, etc.) are served
-frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
-
-if os.path.exists(frontend_dir):
-    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="static")
+app.mount("/", StaticFiles(directory=frontend_dir), name="static")
