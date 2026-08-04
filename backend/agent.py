@@ -31,3 +31,4 @@ def generate_study_kit(notes: str) -> dict:
     )
     
     return json.loads(response.text)
+
