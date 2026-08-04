@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,8 +124,13 @@
         }
 
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
-            100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+            0% {
+                box-shadow: 0 0 5px rgba(99, 102, 241, 0.2);
+            }
+
+            100% {
+                box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+            }
         }
 
         .hero h1 {
@@ -134,6 +140,7 @@
             letter-spacing: -0.02em;
             margin-bottom: 1.5rem;
             background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -283,6 +290,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Header -->
@@ -304,9 +312,11 @@
             <i class="fa-solid fa-sparkles"></i> Powered by Gemini 2.5 Flash
         </div>
         <h1>Turn Raw Notes into Actionable Exam Prep in Seconds</h1>
-        <p>Upload lecture content, PDF text, or outlines. StudySprint AI automatically crafts high-yield summaries, active recall quizzes, spaced repetition flashcards, and a structured 3-day study plan.</p>
+        <p>Upload lecture content, PDF text, or outlines. StudySprint AI automatically crafts high-yield summaries,
+            active recall quizzes, spaced repetition flashcards, and a structured 3-day study plan.</p>
         <div class="hero-actions">
-            <a href="/studio.html" class="btn-glow" style="padding: 0.9rem 2rem; font-size: 1rem;">Start Free Workspace</a>
+            <a href="/studio.html" class="btn-glow" style="padding: 0.9rem 2rem; font-size: 1rem;">Start Free
+                Workspace</a>
             <a href="#features" class="btn-secondary">Explore Features</a>
         </div>
     </section>
@@ -338,7 +348,8 @@
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-file-contract"></i></div>
                 <h3>Executive Summaries</h3>
-                <p>Distills long lecture notes into key insights, formulas, and critical concept breakdowns instantly.</p>
+                <p>Distills long lecture notes into key insights, formulas, and critical concept breakdowns instantly.
+                </p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-circle-question"></i></div>
@@ -348,7 +359,8 @@
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-layer-group"></i></div>
                 <h3>Smart Flashcards</h3>
-                <p>Extracts essential vocabulary, definitions, and technical terms into ready-to-review flashcard pairs.</p>
+                <p>Extracts essential vocabulary, definitions, and technical terms into ready-to-review flashcard pairs.
+                </p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon"><i class="fa-solid fa-calendar-days"></i></div>
@@ -369,17 +381,20 @@
             <div>
                 <div class="step-number">01</div>
                 <h3 style="margin-bottom: 0.5rem;">Paste Your Notes</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Drop in lecture transcripts, textbook excerpts, or meeting outlines into the Studio editor.</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Drop in lecture transcripts, textbook excerpts,
+                    or meeting outlines into the Studio editor.</p>
             </div>
             <div>
                 <div class="step-number">02</div>
                 <h3 style="margin-bottom: 0.5rem;">Click Generate</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Gemini AI processes the context and builds tailored active recall materials in under 5 seconds.</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Gemini AI processes the context and builds
+                    tailored active recall materials in under 5 seconds.</p>
             </div>
             <div>
                 <div class="step-number">03</div>
                 <h3 style="margin-bottom: 0.5rem;">Ace Your Exams</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem;">Review your flashcards, take the active recall quiz, and follow the 3-day revision roadmap.</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Review your flashcards, take the active recall
+                    quiz, and follow the 3-day revision roadmap.</p>
             </div>
         </div>
     </section>
@@ -390,4 +405,5 @@
     </footer>
 
 </body>
+
 </html>
